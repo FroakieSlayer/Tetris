@@ -11,13 +11,19 @@ public class Block {
         points[3]=new Point(2,1);
         topLeft = new Point(4,0);
     }
-    private Point getTopLeft(){
+    public Point getTopLeft(){
         return topLeft;
     }
-    private void setTopLeft(Point p){
-        topLeft.setLocation(p);
+    public void setTopLeft(int r, int c){
+        topLeft.setLocation(c,r);
     }
-    private Point[] getPoints(){
+    public Point[] getPoints(){
         return points;
+    }
+    public int Row(){
+        return (int)topLeft.getY();
+    }
+    public int Column(){
+        return (int)topLeft.getX();
     }
 }
