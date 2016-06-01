@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class Block {
     private Point[] points;
@@ -27,4 +29,5 @@ public class Block {
     public int Column(){
         return (int)topLeft.getX();
     }
+
 }
