@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+
 public class Test extends JComponent {
     public static void main(String [] args){
         Intro intro = new Intro();
@@ -14,6 +16,7 @@ public class Test extends JComponent {
                 Thread.currentThread().interrupt();
             }
         }
+        intro.dispatchEvent(new WindowEvent(intro, WindowEvent.WINDOW_CLOSING));
         FirstWindow fw = new FirstWindow();
         fw.setVisible(true);
         fw.addKeyListener(new KeyAdapter() {
@@ -53,11 +56,13 @@ public class Test extends JComponent {
                     case KeyEvent.VK_W:
                         if(fw.canRotate()){
                             fw.rotate();
+                            fw.repaint();
                         }
                         break;
                     case KeyEvent.VK_UP:
                         if(fw.canRotate()){
                             fw.rotate();
+                            fw.repaint();
                         }
                         break;
                 }
@@ -94,5 +99,7 @@ public class Test extends JComponent {
                 fw.beginClearing();
             }
         }
+        fw.repaint();
+        fw.dispatchEvent(new WindowEvent(fw, WindowEvent.WINDOW_CLOSING));
     }
 }

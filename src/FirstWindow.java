@@ -34,38 +34,45 @@ public class FirstWindow extends JFrame {
         landedPoints=new ArrayList<Point>();
     }
     public void paint(Graphics g) {
-        if(gameOver){
-            g.drawString("GAME OVER",200,200);
-            while(true){
 
-            }
-
-        }
         super.paint(g);
-
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, 500, 940);
-        g.setColor(Color.WHITE);
-
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 20; j++) {
-                g.drawRect((i + 1) * 40, (j + 2) * 40, 40, 40);
+        if(gameOver){
+            g.setColor(Color.WHITE);
+            g.drawString("GAME OVER",200,200);
+            try {
+                Thread.sleep(5000);                 //1000 milliseconds is one second.
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
             }
-        }
-        for (int i = 0; i < b.getPoints().length; i++) {
-            if (b.getPoints()[i].getY() + b.Row() > 1) {
-                g.setColor(b.getPoints()[i].getColor());
-                g.fillRect((b.getPoints()[i].getX() + b.Column()) * 40 + 41, (b.getPoints()[i].getY() + b.Row()) * 40 + 1, 39, 39);
-            }
-        }
 
-        for (int i = 0; i < landedPoints.size(); i++) {
-            g.setColor(landedPoints.get(i).getColor());
-            g.fillRect(landedPoints.get(i).getX() * 40 + 41, landedPoints.get(i).getY() * 40 + 1, 39, 39);
         }
-        for (int i = 0; i < nextBlock.getPoints().length; i++) {
-            g.setColor(nextBlock.getPoints()[i].getColor());
-            g.fillRect(nextBlock.getPoints()[i].getX() * 40 + 541, nextBlock.getPoints()[i].getY() * 40 + 81, 39, 39);
+        if(!gameOver) {
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, 500, 940);
+            g.setColor(Color.WHITE);
+
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 20; j++) {
+                    g.drawRect((i + 1) * 40, (j + 2) * 40, 40, 40);
+                }
+            }
+            for (int i = 0; i < b.getPoints().length; i++) {
+                if (b.getPoints()[i].getY() + b.Row() > 1) {
+                    g.setColor(b.getPoints()[i].getColor());
+                    g.fillRect((b.getPoints()[i].getX() + b.Column()) * 40 + 41, (b.getPoints()[i].getY() + b.Row()) * 40 + 1, 39, 39);
+                }
+            }
+
+            for (int i = 0; i < landedPoints.size(); i++) {
+                g.setColor(landedPoints.get(i).getColor());
+                g.fillRect(landedPoints.get(i).getX() * 40 + 41, landedPoints.get(i).getY() * 40 + 1, 39, 39);
+            }
+            for (int i = 0; i < nextBlock.getPoints().length; i++) {
+                g.setColor(nextBlock.getPoints()[i].getColor());
+                g.fillRect(nextBlock.getPoints()[i].getX() * 40 + 541, nextBlock.getPoints()[i].getY() * 40 + 81, 39, 39);
+            }
+            g.setColor(Color.BLACK);
+            g.drawString("LEVEL: "+level,581,281);
         }
     }
     public void setDelay(int d){
