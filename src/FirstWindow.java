@@ -1,111 +1,169 @@
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.ArrayList;
-
-public class FirstWindow extends JFrame implements ActionListener {
+public class FirstWindow extends JFrame {
     private static final long serialVersionUID = 1L;
-    private boolean[][] isFilled;
+    private int[][] isFilled;
     private int delayForDrop;
+    private int permDelay;
+    private Block test;
+    private Block b;
+    int level = 1;
+    private ArrayList<Point> landedPoints;
     public FirstWindow(){
-        super("xD");
-        setSize(500,940);
+        super("Tetris 2K16 Reloaded: The Legend Continues");
+        setSize(700,940);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        isFilled = new boolean[][] {{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},{false,false,false,false,false,false,false,false,false,false},};
+        isFilled = new int[22][10];
+        for(int i = 0; i<22; i++){
+            for(int j=0;j<10;j++){
+                isFilled[i][j]=-1;
+            }
+        }
         //this is the board and its 22,10 rows, columns. The first two rows are not displayed
-        delayForDrop=1000;
-
-
+        delayForDrop=750;
+        permDelay=750;
+        b=new Block();
+        landedPoints=new ArrayList<Point>();
     }
+    public void paint(Graphics g) {
+        super.paint(g);
 
-    public void paint(Graphics g){
-        //note to self cords for top left square are 40 80 (41 81 for the non border part)
-        g.fillRect(0,0,500,940);
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, 500, 940);
         g.setColor(Color.WHITE);
 
-        for(int i = 0; i<10;i++){
-            for(int j=0; j<20;j++){
-                g.drawRect((i+1)*40,(j+2)*40,40,40);
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 20; j++) {
+                g.drawRect((i + 1) * 40, (j + 2) * 40, 40, 40);
+            }
+        }
+        for (int i = 0; i < b.getPoints().length; i++) {
+            if (b.getPoints()[i].getY() + b.Row() > 1) {
+                g.setColor(b.getPoints()[i].getColor());
+                g.fillRect((b.getPoints()[i].getX() + b.Column()) * 40 + 41, (b.getPoints()[i].getY() + b.Row()) * 40 + 1, 39, 39);
             }
         }
 
-
-        while(true) {
-            boolean landed = false;
-            Block b = new Block();
-            while (!landed){
-                for (int i = 0; i < b.getPoints().length; i++) {
-                    if ((int)b.getPoints()[i].getY() + (int)b.getTopLeft().getY()==21 || isFilled[(int)b.getPoints()[i].getY() + (int)b.getTopLeft().getY()][(int)b.getPoints()[i].getX() + (int)b.getTopLeft().getX()]) {
-                        landed = true;
-                        break;
-                    }
-                }
-                if (landed) {
-                    for(int i=0;i<b.getPoints().length;i++) {
-                        isFilled[(int) b.getPoints()[i].getY() + b.Row()-1][(int) b.getPoints()[i].getX() + b.Column()]=true;
-                        g.setColor(Color.GREEN);
-                        g.fillRect(((int) b.getPoints()[i].getX() + b.Column()) * 40 + 41, ((int) b.getPoints()[i].getY() + b.Row()) * 40 + 1, 39, 39);
-                        g.setColor(Color.BLACK);
-                        g.fillRect(((int) b.getPoints()[i].getX() + b.Column()) * 40 + 41, ((int) b.getPoints()[i].getY() + b.Row() - 1) * 40 + 1, 39, 39);
-                    }
-                }
-
-
-                for (int i = 0; i < b.getPoints().length; i++) {
-
-                    if (b.getPoints()[i].getY() + b.Row() > 1) {
-                        g.setColor(Color.BLUE);
-                        g.fillRect(((int) b.getPoints()[i].getX() + b.Column()) * 40 + 41, ((int) b.getPoints()[i].getY() + b.Row()) * 40 + 1, 39, 39);
-                    }
-                    if (b.getPoints()[i].getY() + b.Row() > 2) {
-                        g.setColor(Color.BLACK);
-                        g.fillRect(((int) b.getPoints()[i].getX() + b.Column()) * 40 + 41, ((int) b.getPoints()[i].getY() + b.Row()-1) * 40 + 1, 39, 39);
-                    }
-                }
-
-                try {
-                    Thread.sleep(delayForDrop);                 //1000 milliseconds is one second.
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-                b.setTopLeft(b.Row() + 1, b.Column());
-
+        for (int i = 0; i < landedPoints.size(); i++) {
+            g.setColor(landedPoints.get(i).getColor());
+            g.fillRect(landedPoints.get(i).getX() * 40 + 41, landedPoints.get(i).getY() * 40 + 1, 39, 39);
+        }
+    }
+    public void setDelay(int d){
+        delayForDrop=d;
+    }
+    public void revertDelay(){
+        delayForDrop=permDelay;
+    }
+    public int getDelay(){
+        return delayForDrop;
+    }
+    public Block getBlock(){
+        return b;
+    }
+    public int[][] getFilled(){
+        return isFilled;
+    }
+    public void generateBlock(){
+        b=new Block();
+    }
+    public void landBlock(){
+        for (int i = 0; i < b.getPoints().length; i++) {
+            landedPoints.add(new Point(b.getPoints()[i].getX()+b.Column(),b.getPoints()[i].getY()+b.Row(),b.getPoints()[i].getColor()));
+            isFilled[b.getPoints()[i].getY() + b.Row()][b.getPoints()[i].getX() + b.Column()]=1;
+        }
+    }
+    public void moveRight(){
+        b.setTopLeft(b.Row(), b.Column()+1);
+    }
+    public void moveLeft(){
+        b.setTopLeft(b.Row(), b.Column()-1);
+    }
+    public void moveDown(){
+        b.setTopLeft(b.Row() + 1, b.Column());
+    }
+    public void rotate(){
+        b.setPoints(test.getPoints());
+    }
+    public boolean canMoveRight(){
+        for(int i=0; i<b.getPoints().length;i++){
+            if(b.getPoints()[i].getX()+b.Column()>8 || isFilled[b.getPoints()[i].getY()+b.Row()][b.getPoints()[i].getX()+b.Column()+1]==1)
+                return false;
+        }
+        return true;
+    }
+    public boolean canMoveLeft(){
+        for(int i=0; i<b.getPoints().length;i++){
+            if(b.getPoints()[i].getX()+b.Column()<1 || isFilled[b.getPoints()[i].getY()+b.Row()][b.getPoints()[i].getX()+b.Column()-1]==1)
+                return false;
+        }
+        return true;
+    }
+    public boolean canRotate(){
+        if(b.getPoints()[1].getColor()==Color.YELLOW)
+            return false;
+        test = new Block(b.rotate());
+        for(int i=0;i<test.getPoints().length;i++){
+            if(test.getPoints()[i].getX()+b.Column()>9 || test.getPoints()[i].getX()+b.Column()<0 || test.getPoints()[i].getY()+b.Row()>21 || test.getPoints()[i].getY()+b.Row()<2){
+                return false;
+            }
+            if(isFilled[test.getPoints()[i].getY()+b.Row()][test.getPoints()[i].getX()+b.Column()]>0){
+                return false;
             }
         }
+        return true;
     }
-    public void keyPressed(KeyEvent e) {
-
-        int key = e.getKeyCode();
-
-        /*if (key == KeyEvent.VK_LEFT) {
-
+    public boolean checkIfClear(int y){
+        for(int i=0;i<10;i++){
+            if(isFilled[y][i]==-1){
+                return false;
+            }
         }
-
-        if (key == KeyEvent.VK_RIGHT) {
-
+        return true;
+    }
+    public void beginClearing(){
+        int y = 21;
+        while(checkIfClear(y)){
+            for(int i=0; i<landedPoints.size();i++){
+                if(landedPoints.get(i).getY()==y){
+                    landedPoints.remove(i);
+                    i--;
+                }
+            }
+            for(int i=0;i<10;i++){
+                isFilled[y][i]=-1;
+            }
+            y--;
         }
-
-        if (key == KeyEvent.VK_UP) {
-
-        }*/
-
-        if (key == KeyEvent.VK_DOWN) {
-            delayForDrop=100;
+        int drop = 21-y;
+        for(int i=20;i>=0;i--){
+            for(int j=0;j<10;j++){
+                if(isFilled[i][j]==1) {
+                    isFilled[i + drop][j] = 1;
+                    isFilled[i][j]=-1;
+                }
+            }
+        }
+        for(int i=0;i<landedPoints.size();i++){
+            landedPoints.get(i).setY(landedPoints.get(i).getY()+drop);
+        }
+        delayForDrop-=50;
+        level+=drop;
+    }
+    public void playSound() {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("C:/Users/chris/Music/Song.mp3").getAbsoluteFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch(Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
         }
     }
-    private class TAdapter extends KeyAdapter {
-        @Override
-        public void keyPressed(KeyEvent e) {
-            keyPressed(e);
-        }
-    }
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
-
-
 }
