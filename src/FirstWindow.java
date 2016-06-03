@@ -12,8 +12,10 @@ public class FirstWindow extends JFrame {
     private int permDelay;
     private Block test;
     private Block b;
-    int level = 1;
+    private Block nextBlock;
+    private int level = 1;
     private ArrayList<Point> landedPoints;
+    private boolean gameOver;
     public FirstWindow(){
         super("Tetris 2K16 Reloaded: The Legend Continues");
         setSize(700,940);
@@ -28,9 +30,17 @@ public class FirstWindow extends JFrame {
         delayForDrop=750;
         permDelay=750;
         b=new Block();
+        nextBlock=new Block();
         landedPoints=new ArrayList<Point>();
     }
     public void paint(Graphics g) {
+        if(gameOver){
+            g.drawString("GAME OVER",200,200);
+            while(true){
+
+            }
+
+        }
         super.paint(g);
 
         g.setColor(Color.BLACK);
@@ -53,6 +63,10 @@ public class FirstWindow extends JFrame {
             g.setColor(landedPoints.get(i).getColor());
             g.fillRect(landedPoints.get(i).getX() * 40 + 41, landedPoints.get(i).getY() * 40 + 1, 39, 39);
         }
+        for (int i = 0; i < nextBlock.getPoints().length; i++) {
+            g.setColor(nextBlock.getPoints()[i].getColor());
+            g.fillRect(nextBlock.getPoints()[i].getX() * 40 + 541, nextBlock.getPoints()[i].getY() * 40 + 81, 39, 39);
+        }
     }
     public void setDelay(int d){
         delayForDrop=d;
@@ -70,10 +84,13 @@ public class FirstWindow extends JFrame {
         return isFilled;
     }
     public void generateBlock(){
-        b=new Block();
+        b=nextBlock;
+        nextBlock=new Block();
     }
     public void landBlock(){
         for (int i = 0; i < b.getPoints().length; i++) {
+            if(b.getPoints()[i].getY()+b.Row()<2)
+                gameOver=true;
             landedPoints.add(new Point(b.getPoints()[i].getX()+b.Column(),b.getPoints()[i].getY()+b.Row(),b.getPoints()[i].getColor()));
             isFilled[b.getPoints()[i].getY() + b.Row()][b.getPoints()[i].getX() + b.Column()]=1;
         }
@@ -157,7 +174,7 @@ public class FirstWindow extends JFrame {
     }
     public void playSound() {
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("C:/Users/chris/Music/Song.mp3").getAbsoluteFile());
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("C:/Users/chris/Music/Song.wav").getAbsoluteFile());
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
@@ -165,5 +182,8 @@ public class FirstWindow extends JFrame {
             System.out.println("Error with playing sound.");
             ex.printStackTrace();
         }
+    }
+    public boolean getGameOver(){
+        return gameOver;
     }
 }

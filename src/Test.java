@@ -3,6 +3,17 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 public class Test extends JComponent {
     public static void main(String [] args){
+        Intro intro = new Intro();
+        intro.setVisible(true);
+        intro.playSound();
+        for(int i = 0; i<400; i++){
+            intro.repaint();
+            try {
+                Thread.sleep(150);                 //1000 milliseconds is one second.
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
         FirstWindow fw = new FirstWindow();
         fw.setVisible(true);
         fw.addKeyListener(new KeyAdapter() {
@@ -64,7 +75,7 @@ public class Test extends JComponent {
             }
         });
         fw.playSound();
-        while(true){
+        while(!fw.getGameOver()){
             try {
                 Thread.sleep(fw.getDelay());                 //1000 milliseconds is one second.
             } catch (InterruptedException ex) {
