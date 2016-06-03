@@ -8,7 +8,7 @@ public class Test extends JComponent {
         Intro intro = new Intro();
         intro.setVisible(true);
         intro.playSound();
-        for(int i = 0; i<400; i++){
+        for(int i = 0; i<500; i++){
             intro.repaint();
             try {
                 Thread.sleep(150);                 //1000 milliseconds is one second.
