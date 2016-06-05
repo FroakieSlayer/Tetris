@@ -7,12 +7,14 @@ import java.io.File;
 
 public class Intro extends JFrame {
     private int dialogheight;
+    private boolean introDone;
     public Intro(){
         super("HYPE");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1920,1080);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        dialogheight=1080;
+        dialogheight=1080+450;
+        introDone=false;
     }
     public void paint(Graphics g){
         super.paint(g);
@@ -22,8 +24,12 @@ public class Intro extends JFrame {
             int r=(int)(Math.random()*10);
         if(rand!=0){
             g.setColor(Color.WHITE);
-            g.drawString("TETRIS RELOADED 2K16:...", 950-r, dialogheight);
-            g.drawString("THE LEGEND CONTINUES!!!!!!!!!!!", 950-r, dialogheight + 50);
+            g.setFont(new Font("Comic Sans MS", Font.PLAIN, 60));
+            g.drawString("TOP KEK GAME STUDIOS SOFTWORKS PRESENTS.....", 300-r, dialogheight-400);
+            g.drawString("TETRIS RELOADED 2K16:...", 300-r, dialogheight-200);
+            g.setFont(new Font("Comic Sans MS", Font.PLAIN, 100));
+            g.drawString("THE LEGEND CONTINUES!!!!!!!!!!!", 200-r, dialogheight + 50);
+            g.setFont(new Font("Comic Sans MS", Font.PLAIN, 25));
             g.drawString("LEVEL AND WORLD DESIGN: TANER \"MAD DOG\" JONS", 950-r, dialogheight + 100);
             g.drawString("JONA \"Juicy J\" CALVO: RESEARCH AND DEVELOPMENT", 950-r, dialogheight + 150);
             g.drawString("CINEMATOGRAPHY: CHRIS \"BIG PAGA\" MINGE", 950-r, dialogheight + 200);
@@ -50,5 +56,10 @@ public class Intro extends JFrame {
             ex.printStackTrace();
         }
     }
-
+    public boolean getIntroDone(){
+        return introDone;
+    }
+    public void endIntro(){
+        introDone=true;
+    }
 }
