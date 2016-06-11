@@ -12,6 +12,11 @@ public class Block {
         points=pp;
         topLeft = new Point(4, 0,Color.RED);
     }
+    public Block(Block b){
+        points=b.getPoints();
+        topLeft = new Point(4, 0,Color.RED);
+        topLeft.setLocation(b.Column(),b.Row());
+    }
     public Point getTopLeft() {
         return topLeft;
     }
@@ -53,17 +58,17 @@ public class Block {
                 break;
             case 3:
                 Color f=Color.GREEN;
-                points[0] = new Point(1, 2,f);
-                points[1] = new Point(0, 2,f);
-                points[2] = new Point(0, 1,f);
-                points[3] = new Point(0, 0,f);
+                points[0] = new Point(2, 0,f);
+                points[1] = new Point(2, 1,f);
+                points[2] = new Point(1, 1,f);
+                points[3] = new Point(0, 1,f);
                 break;
             case 4:
                 Color g=Color.BLUE;
-                points[0] = new Point(0, 2,g);
-                points[1] = new Point(1, 2,g);
-                points[2] = new Point(1, 1,g);
-                points[3] = new Point(1, 0,g);
+                points[0] = new Point(2, 1,g);
+                points[1] = new Point(2, 0,g);
+                points[2] = new Point(1, 0,g);
+                points[3] = new Point(0, 0,g);
                 break;
             case 5:
                 Color h=Color.CYAN;
@@ -83,12 +88,12 @@ public class Block {
     }
     public Point[] rotate(){
         Point[] newpoints = new Point[4];
-        if(points[0].getColor()==Color.RED){
-            for(int i=0; i<points.length;i++){
-                newpoints[i]=new Point(-(points[i].getY()-points[2].getY()),points[i].getX()-points[2].getX(),Color.RED);
+        //if(points[0].getColor()==Color.RED){
+            for(int i=0; i<4;i++){
+                newpoints[i]=new Point(-(points[i].getY()-points[2].getY()),points[i].getX()-points[2].getX(),points[0].getColor());
             }
-        }
-        if(points[0].getColor()==Color.ORANGE){
+        //}
+        /*if(points[0].getColor()==Color.ORANGE){
             for(int i=0; i<points.length;i++){
                 newpoints[i]=new Point(-(points[i].getY()-points[2].getY()),points[i].getX()-points[2].getX(),Color.ORANGE);
             }
@@ -112,6 +117,13 @@ public class Block {
             for(int i=0; i<points.length;i++){
                 newpoints[i]=new Point(-(points[i].getY()-points[2].getY()),points[i].getX()-points[2].getX(),Color.MAGENTA);
             }
+        }*/
+        return newpoints;
+    }
+    public Point[] rotateCounter(){
+        Point[] newpoints = new Point[4];
+        for(int i=0; i<4;i++){
+            newpoints[i]=new Point((points[i].getY()-points[2].getY()),-(points[i].getX()-points[2].getX()),points[0].getColor());
         }
         return newpoints;
     }
